@@ -7,19 +7,17 @@ WORKDIR /app
 # Copy the requirements file to the container
 COPY requirements.txt .
 
-# Install the dependencies
+# Install dependencies and clean up to keep the image size small
 RUN apt-get update && apt-get install -y \
     tk \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code to the container
 COPY . .
 
-# Specify the command to run on container start
-CMD ["python3", "server.py"]
-
 # Expose the port the app runs on
 EXPOSE 8080
+
+# Specify the command to run on container start
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "server:app"]

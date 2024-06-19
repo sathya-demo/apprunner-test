@@ -62,7 +62,7 @@ def process_transcript(file_path):
         return []
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8080)
 
 #delete transcripts after running
 #look into deployment 
