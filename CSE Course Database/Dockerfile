@@ -1,20 +1,25 @@
-# Use an official Python runtime as a parent image
+# Use the official Python image from the Docker Hub
 FROM python:3.9-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the requirements file to the container
+COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt > install.log 2>&1
+# Install the dependencies
+RUN apt-get update && apt-get install -y \
+    tk \
+    && rm -rf /var/lib/apt/lists/*
 
-# Make port 8080 available to the world outside this container
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code to the container
+COPY . .
+
+# Specify the command to run on container start
+CMD ["python3", "server.py"]
+
+# Expose the port the app runs on
 EXPOSE 8080
-
-# Define environment variable
-ENV FLASK_APP=server.py
-
-# Run the application
-CMD ["python", "server.py"]
