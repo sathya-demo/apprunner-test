@@ -1,5 +1,4 @@
 import sqlite3
-from tkinter.tix import TEXT
 
 conn = sqlite3.connect('course.db')
 c = conn.cursor()
